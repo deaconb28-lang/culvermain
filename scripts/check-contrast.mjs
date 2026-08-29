@@ -1,14 +1,19 @@
 /**
- * Measures the hero headline against the photograph behind it.
+ * Measures the cream type in the hero — the headline and the paragraph beside
+ * it — against the photograph behind it.
  *
- * Takes two screenshots of the headline's box — one with the type, one
- * without — derives the glyph mask from the difference, and reports the worst
- * contrast ratio over the pixels actually behind the letterforms. Measuring
- * the whole bounding box instead would fail on empty ground beside short
- * lines that no letter ever covers.
+ * Takes two screenshots of each element's box: one as rendered, one with the
+ * text set to `transparent`. The difference gives the glyph mask; the second
+ * shot gives the ground behind those glyphs. Setting the fill transparent
+ * rather than hiding the element keeps the type's own text-shadow painted,
+ * which is correct — the halo genuinely is what sits behind the letterform,
+ * and on this hero it is what carries the contrast.
  *
- * The handoff asks for >=3:1. The scrim in Hero.astro is tuned to this photo —
- * if the photo is replaced, run this again.
+ * Measuring the whole bounding box instead would fail on empty ground beside
+ * short lines that no letter ever covers.
+ *
+ * The handoff asks for >=3:1. Hero.astro's scrim and halo are tuned to this
+ * photo — if the photo is replaced, run this again.
  *
  * Run against a served build:  npm run preview  &&  npm run check:contrast
  */
@@ -17,6 +22,12 @@ import sharp from 'sharp';
 
 const BASE = process.env.BASE_URL ?? 'http://localhost:4321/';
 const TARGET = 3;
+
+/** Every piece of cream type sitting directly on the photograph. */
+const TARGETS = [
+  ['headline ', '.hero h1'],
+  ['paragraph', '.hero__aside p'],
+];
 
 const lum = (r, g, b) => {
   const f = (c) => {
@@ -45,57 +56,70 @@ for (const [w, h] of sizes) {
   await page.goto(BASE, { waitUntil: 'networkidle' });
   await page.waitForTimeout(2200); // let the ken burns settle
 
-  const box = await page.evaluate(() => {
-    document.getElementById('sms-popup').hidden = true;
-    const r = document.querySelector('.hero h1').getBoundingClientRect();
-    return {
-      x: Math.round(r.x),
-      y: Math.round(r.y),
-      width: Math.round(r.width),
-      height: Math.round(r.height),
-    };
-  });
+  await page.evaluate(() => (document.getElementById('sms-popup').hidden = true));
 
-  const withType = await raw(await page.screenshot({ clip: box }));
-  await page.evaluate(() => (document.querySelector('.hero h1').style.visibility = 'hidden'));
-  const ground = await raw(await page.screenshot({ clip: box }));
-  await ctx.close();
+  for (const [label, selector] of TARGETS) {
+    const box = await page.evaluate((sel) => {
+      const r = document.querySelector(sel).getBoundingClientRect();
+      return {
+        x: Math.round(r.x),
+        y: Math.round(r.y),
+        width: Math.round(r.width),
+        height: Math.round(r.height),
+      };
+    }, selector);
 
-  const ch = withType.info.channels;
-  let worst = Infinity;
-  let culprit = null;
+    const withType = await raw(await page.screenshot({ clip: box }));
+    await page.evaluate((sel) => {
+      const el = document.querySelector(sel);
+      el.dataset.priorColor = el.style.color;
+      el.style.color = 'transparent';
+    }, selector);
+    const ground = await raw(await page.screenshot({ clip: box }));
+    await page.evaluate((sel) => {
+      const el = document.querySelector(sel);
+      el.style.color = el.dataset.priorColor ?? '';
+    }, selector);
 
-  for (let i = 0; i < withType.data.length; i += ch) {
-    // A glyph pixel: the type changed it, and it landed close to cream. The
-    // second test drops antialiased edge pixels, which are part background.
-    const dr = Math.abs(withType.data[i] - ground.data[i]);
-    const dg = Math.abs(withType.data[i + 1] - ground.data[i + 1]);
-    const db = Math.abs(withType.data[i + 2] - ground.data[i + 2]);
-    if (dr + dg + db < 24) continue;
-    if (withType.data[i] < 235 || withType.data[i + 1] < 231 || withType.data[i + 2] < 222) continue;
+    const ch = withType.info.channels;
+    let worst = Infinity;
+    let culprit = null;
 
-    const r = ratio(creamL, lum(ground.data[i], ground.data[i + 1], ground.data[i + 2]));
-    if (r < worst) {
-      worst = r;
-      culprit = [ground.data[i], ground.data[i + 1], ground.data[i + 2]];
+    for (let i = 0; i < withType.data.length; i += ch) {
+      // A glyph pixel: the fill changed it, and it landed close to cream. The
+      // second test drops antialiased edges, which are part background.
+      const dr = Math.abs(withType.data[i] - ground.data[i]);
+      const dg = Math.abs(withType.data[i + 1] - ground.data[i + 1]);
+      const db = Math.abs(withType.data[i + 2] - ground.data[i + 2]);
+      if (dr + dg + db < 24) continue;
+      if (withType.data[i] < 235 || withType.data[i + 1] < 231 || withType.data[i + 2] < 222)
+        continue;
+
+      const r = ratio(creamL, lum(ground.data[i], ground.data[i + 1], ground.data[i + 2]));
+      if (r < worst) {
+        worst = r;
+        culprit = [ground.data[i], ground.data[i + 1], ground.data[i + 2]];
+      }
+    }
+
+    if (worst === Infinity) {
+      console.log(`${w}x${h}  ${label}  SKIP  no glyph pixels found`);
+      continue;
+    }
+    if (worst < overallWorst.ratio) overallWorst = { ratio: worst, at: `${w}x${h} ${label}` };
+    if (worst < TARGET) {
+      fails++;
+      console.log(`${w}x${h}  ${label}  FAIL  ${worst.toFixed(2)}:1  (vs rgb(${culprit}))`);
     }
   }
 
-  if (worst === Infinity) {
-    console.log(`${w}x${h}  SKIP  no glyph pixels found`);
-    continue;
-  }
-  if (worst < overallWorst.ratio) overallWorst = { ratio: worst, at: `${w}x${h}` };
-  if (worst < TARGET) {
-    fails++;
-    console.log(`${w}x${h}  FAIL  ${worst.toFixed(2)}:1  (vs rgb(${culprit}))`);
-  }
+  await ctx.close();
 }
 
 await browser.close();
 console.log(
   fails
-    ? `${fails} of ${sizes.length} viewports below ${TARGET}:1`
-    : `all ${sizes.length} viewports >= ${TARGET}:1 (worst ${overallWorst.ratio.toFixed(2)}:1 at ${overallWorst.at})`,
+    ? `${fails} of ${sizes.length * TARGETS.length} measurements below ${TARGET}:1`
+    : `all ${sizes.length * TARGETS.length} measurements >= ${TARGET}:1 (worst ${overallWorst.ratio.toFixed(2)}:1 at ${overallWorst.at})`,
 );
 process.exit(fails ? 1 : 0);

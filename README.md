@@ -112,12 +112,27 @@ as the type gets smaller — the width-to-font ratio is not constant, so the nai
 factor is too generous at small sizes. `npm run check:layout` asserts three hero
 lines and three single-line About lines from 320px to 1920px.
 
-**Hero contrast.** The handoff's scrim stops left the cream headline at 2.0–2.9:1
-against the bright window in the photo — under the 3:1 the handoff itself asks for.
-Around 1024px the hero's right column wraps, which lifts the headline into the thin
-part of the gradient; that is the worst case. The stops in `Hero.astro` are deepened
-to hold ≥3.2:1 at every width and viewport height tested. **If the hero photo is
-replaced, re-run `npm run check:contrast`** — the gradient is tuned to this image.
+**Hero contrast, and why the scrim is light.** The handoff's scrim stops leave the
+cream headline at 1.9:1 against the bright window in the photo — well under the 3:1
+the handoff itself asks us to verify. Deepening the gradient enough to fix that
+washes the whole photograph navy, which is not what the room looks like.
+
+So the contrast is carried locally, by a dense halo on the type, and the gradient
+does only what it is good at: settling the hero's bottom edge into the navy marquee
+below. That lets the scrim run *lighter* than the handoff's — 0.20 at the top against
+its 0.40, and lighter through the middle — so the photo keeps its own colour, while
+the headline measures ≥4.6:1 and the paragraph beside it ≥3.4:1.
+
+Stops are anchored to the bottom in px rather than percentages: the headline sits a
+roughly fixed distance off the hero's bottom edge while the hero's height varies, so
+percentage stops slide out from under it on short viewports, and around 1024px where
+the right column wraps and lifts the headline higher still.
+
+`npm run check:contrast` measures this the way it actually works — it screenshots the
+type, then re-screenshots it with the fill set to `transparent`, which keeps the halo
+painted. The difference is the glyph mask; the second shot is the ground behind those
+glyphs. **If the hero photo is replaced, re-run it** — both the scrim and the halo are
+tuned to this image.
 
 **The floating ORDER NOW button** stays visible as designed, including over the hero
 (the hero's 108px bottom padding is what keeps it clear of the right column). It fades

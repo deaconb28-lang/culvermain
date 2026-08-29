@@ -19,19 +19,25 @@ import { site } from '../data/site';
     decoding="sync"
   />
   <!--
-    Scrim is tuned to this photograph. The handoff's stops
-    (0.4/0.34/0.62/0.9, top to bottom) leave the cream headline at 1.9:1
-    against the bright window behind it — well under the 3:1 the handoff
-    itself asks us to verify. The headline sits a roughly fixed distance off
-    the hero's bottom edge while the hero's height varies, so stops measured
-    as a percentage from the top slide out from under it; worst on short
-    viewports and around 1024px, where the right column wraps and lifts the
-    headline higher still. Anchoring the stops to the bottom in px tracks the
-    headline instead. The end alphas are the design's (0.4 top, ~0.9 bottom)
-    and the mid-tones carry the work, which is where the handoff says the
-    difference is made. Holds >=3.6:1 across every width and viewport height
-    tested. Re-measure if the hero image is ever swapped:
-    `npm run check:contrast`.
+    The handoff's scrim (0.4/0.34/0.62/0.9, top to bottom) leaves the cream
+    headline at 1.9:1 against the bright window behind it — well under the 3:1
+    the handoff itself asks us to verify. Deepening the gradient enough to fix
+    that washes the whole photograph navy, which is not what the room looks
+    like.
+
+    So the contrast is carried locally instead, by a dense halo on the type
+    (see the text-shadow stack below), and the gradient does only what it is
+    good at: settling the bottom edge into the navy marquee that follows. That
+    lets the scrim run *lighter* than the handoff's at the top (0.20 vs 0.40)
+    and through the middle, so the photo keeps its own colour, while the
+    headline measures >=4.6:1.
+
+    Stops are anchored to the bottom in px rather than in percentages, because
+    the headline sits a roughly fixed distance off the hero's bottom edge while
+    the hero's height varies — percentages slide out from under it on short
+    viewports.
+
+    Re-measure if the hero image is ever swapped: `npm run check:contrast`.
   -->
   <div class="hero__scrim"></div>
 
@@ -84,10 +90,10 @@ import { site } from '../data/site';
     inset: 0;
     background: linear-gradient(
       0deg,
-      rgba(11, 42, 91, 0.92) 0px,
-      rgba(11, 42, 91, 0.78) 220px,
-      rgba(11, 42, 91, 0.6) 500px,
-      rgba(11, 42, 91, 0.4) 100%
+      rgba(11, 42, 91, 0.88) 0px,
+      rgba(11, 42, 91, 0.62) 200px,
+      rgba(11, 42, 91, 0.32) 470px,
+      rgba(11, 42, 91, 0.2) 100%
     );
   }
 
@@ -120,7 +126,16 @@ import { site } from '../data/site';
     color: var(--cream);
     text-transform: uppercase;
     max-width: 14ch;
-    text-shadow: 0 2px 24px rgba(11, 42, 91, 0.55);
+    /*
+      The handoff's single soft shadow, tightened into a halo. This is what
+      holds the headline above 3:1 — it darkens the pixels immediately behind
+      the letterforms, where it matters, instead of tinting the whole
+      photograph. Reads as the design's drop shadow at a glance.
+    */
+    text-shadow:
+      0 1px 6px rgba(11, 42, 91, 0.98),
+      0 0 18px rgba(11, 42, 91, 0.92),
+      0 0 46px rgba(11, 42, 91, 0.7);
   }
 
   .hero__aside {

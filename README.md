@@ -82,8 +82,8 @@ src/
 │   ├── Hero.astro
 │   ├── Marquee.astro
 │   ├── About.astro
-│   ├── MenuSection.astro / MenuRow.astro
 │   ├── PhotoGrid.astro
+│   ├── MenuSection.astro / MenuRow.astro
 │   ├── CounterBand.astro
 │   ├── SiteFooter.astro
 │   ├── FloatingOrder.astro    (fixed bottom-right CTA)
@@ -143,8 +143,10 @@ collapse into a drawer under the header; below 520px the header's ORDER NOW hide
 the floating button carries the conversion. The drawer reuses the header palette and
 the same squared corners.
 
-**The photo grid** is a hard-coded 7/5 split on a 12-column grid, which does not stack
-on its own. Below 720px it becomes a single column.
+**The photo grid** sits between About and the menu, rather than after the menu as in
+the handoff — the food photography now leads into the food list instead of following
+it. It is a hard-coded 7/5 split on a 12-column grid, which does not stack on its own;
+below 720px it becomes a single column.
 
 **The popup on short viewports.** In its single-column state the image pane moves above
 the form and becomes sticky, so the close button stays reachable while the panel

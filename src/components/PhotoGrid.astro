@@ -36,8 +36,13 @@ import breakfast from '../assets/breakfast.png';
 </section>
 
 <style>
+  /*
+    Sits between About and the menu, both on the cream ground. About's 110px
+    bottom padding carries the gap above; the 96px below matches the menu
+    section's own top padding, so the navy edge lands where it would have.
+  */
   .grid-section {
-    padding: 0 var(--gutter) 110px;
+    padding: 0 var(--gutter) 96px;
   }
 
   .photo-grid {
@@ -127,7 +132,7 @@ import breakfast from '../assets/breakfast.png';
   */
   @media (max-width: 720px) {
     .grid-section {
-      padding-bottom: 72px;
+      padding-bottom: 64px;
     }
 
     .photo-grid {

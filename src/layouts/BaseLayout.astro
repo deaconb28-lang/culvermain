@@ -9,7 +9,11 @@ interface Props {
 }
 
 const { title, description = site.description, ogImage = '/og.jpg' } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const origin = Astro.site ?? new URL(site.url);
+const canonical = new URL(Astro.url.pathname, origin).href;
+
+// Off unless the host sets INDEXABLE=true — see the note in astro.config.mjs.
+const indexable = process.env.INDEXABLE === 'true';
 
 const schema = {
   '@context': 'https://schema.org',
@@ -63,13 +67,14 @@ const schema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#0B2A5B" />
+    {!indexable && <meta name="robots" content="noindex, nofollow" />}
 
     <meta property="og:type" content="restaurant" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site ?? site.url).href} />
+    <meta property="og:image" content={new URL(ogImage, origin).href} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

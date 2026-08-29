@@ -32,6 +32,26 @@ npm run preview      # serve dist/
 The build output in `dist/` is plain static files — deploy it to any static host
 (Netlify, Cloudflare Pages, Vercel, S3 + CloudFront).
 
+### Deployment origin
+
+Canonical, `og:url`, `og:image` and the sitemap are all derived from one value, so
+it has to match wherever the build is actually served — point it at the wrong host
+and every link preview asks for assets that aren't there.
+
+It defaults to the pitch deployment (`https://culverandmain.vercel.app`) with
+indexing **off**: until this is the real site, a public copy of the client's
+photography and menu should not be in anyone's search index.
+
+When it moves to the client's own domain, set both in the host's environment:
+
+```bash
+SITE_URL=https://www.culverandmain.com
+INDEXABLE=true
+```
+
+That switches canonical and `og:*` to the real domain, drops the `noindex`, and
+turns the sitemap and a permissive `robots.txt` back on.
+
 ### Scripts
 
 | Script | What it does |

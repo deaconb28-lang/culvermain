@@ -1,0 +1,444 @@
+---
+import { Image } from 'astro:assets';
+import popupFood from '../assets/popup-food.png';
+import { site, smsOptInEndpoint } from '../data/site';
+---
+
+<div
+  class="overlay"
+  id="sms-popup"
+  data-delay={site.popup.delaySeconds}
+  data-storage-key={site.popup.storageKey}
+  data-endpoint={smsOptInEndpoint}
+  hidden
+>
+  <div
+    class="panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sms-popup-title"
+    tabindex="-1"
+    data-panel
+  >
+    <div class="pane pane--form">
+      <div class="lede">Enter mobile phone number to join!</div>
+      <h2 id="sms-popup-title">Get $5 in C&amp;M House Credit</h2>
+      <div class="sub">after downloading the mobile app</div>
+
+      <form class="form" novalidate data-form>
+        <label class="visually-hidden" for="sms-phone">Mobile phone number</label>
+        <input
+          id="sms-phone"
+          name="phone"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder="Mobile phone number"
+          aria-describedby="sms-legal"
+          required
+        />
+
+        <p class="feedback" role="status" aria-live="polite" data-feedback></p>
+
+        <p class="legal" id="sms-legal">
+          New customers only. Only redeemable in the mobile app. By providing your phone number,
+          you agree to receive marketing and transactional text messages from CULVER &amp; MAIN.
+          Consent is not a condition of purchase. Message and data rates may apply. Message
+          frequency varies. Reply STOP to opt out, HELP for help.
+        </p>
+
+        <button type="submit" class="continue" data-submit>Continue</button>
+      </form>
+    </div>
+
+    <div class="pane pane--image">
+      <Image
+        src={popupFood}
+        widths={[522, 800]}
+        sizes="(max-width: 660px) 100vw, 515px"
+        alt="Challah french toast with berries, alongside a matcha"
+        loading="lazy"
+      />
+      <button type="button" class="close" aria-label="Close" data-close>✕</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--navy-60);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .overlay[hidden] {
+    display: none;
+  }
+
+  .panel {
+    position: relative;
+    width: min(1030px, 100%);
+    max-height: 92vh;
+    overflow: auto;
+    background: var(--cream);
+    border-radius: var(--r-shell);
+    animation: popIn 0.45s var(--ease) both;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    box-shadow: 0 30px 80px rgba(11, 42, 91, 0.4);
+  }
+
+  .pane--form {
+    padding: clamp(32px, 4vw, 56px);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    justify-content: center;
+  }
+
+  .lede,
+  .sub {
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .sub {
+    opacity: 0.8;
+  }
+
+  h2 {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 3vw, 38px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  input {
+    width: 100%;
+    margin-top: 10px;
+    padding: 18px 20px;
+    font-family: var(--font-body);
+    font-size: 17px;
+    color: var(--navy);
+    background: var(--cream);
+    border: 1.5px solid var(--navy-35);
+    border-radius: var(--r-field);
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  input:focus {
+    border-color: var(--tomato);
+  }
+
+  input[aria-invalid='true'] {
+    border-color: var(--tomato);
+  }
+
+  .feedback {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--tomato);
+  }
+
+  .feedback:empty {
+    display: none;
+  }
+
+  .feedback[data-state='ok'] {
+    color: var(--navy);
+  }
+
+  .legal {
+    margin: 14px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 0.75;
+  }
+
+  .continue {
+    margin-top: 8px;
+    width: 100%;
+    padding: 18px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: var(--tomato);
+    border: none;
+    border-radius: var(--r-field);
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+
+  .continue:hover {
+    background: var(--navy);
+  }
+
+  .continue[disabled] {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .pane--image {
+    position: relative;
+    min-height: 320px;
+  }
+
+  .pane--image :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cream);
+    color: var(--navy);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.25s ease;
+  }
+
+  .close:hover {
+    background: var(--yellow);
+  }
+
+  /*
+    Single-column state: the image pane moves above the form, so the close
+    button becomes the first thing in the scroll flow and stays reachable on
+    short viewports.
+  */
+  @media (max-width: 660px) {
+    .overlay {
+      padding: 16px;
+    }
+
+    .panel {
+      grid-template-columns: 1fr;
+    }
+
+    .pane--image {
+      order: -1;
+      min-height: 200px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .pane--image :global(img) {
+      position: relative;
+      height: 200px;
+    }
+
+    .pane--form {
+      padding: 28px 24px 32px;
+    }
+  }
+
+  @media (max-height: 620px) {
+    .panel {
+      max-height: 96vh;
+    }
+  }
+</style>
+
+<script>
+  import { track } from '../scripts/analytics';
+
+  const overlay = document.getElementById('sms-popup');
+  const panel = overlay?.querySelector<HTMLElement>('[data-panel]');
+  const form = overlay?.querySelector<HTMLFormElement>('[data-form]');
+  const input = overlay?.querySelector<HTMLInputElement>('#sms-phone');
+  const feedback = overlay?.querySelector<HTMLElement>('[data-feedback]');
+  const submit = overlay?.querySelector<HTMLButtonElement>('[data-submit]');
+  const closeBtn = overlay?.querySelector<HTMLButtonElement>('[data-close]');
+
+  if (overlay && panel && form && input && feedback && submit && closeBtn) {
+    const delay = Number(overlay.dataset.delay ?? 2) * 1000;
+    const storageKey = overlay.dataset.storageKey ?? 'cm-sms-popup-dismissed-v1';
+    const endpoint = overlay.dataset.endpoint ?? '';
+
+    let timer: number | undefined;
+    let lastFocused: HTMLElement | null = null;
+
+    const store = {
+      get(): boolean {
+        try {
+          return localStorage.getItem(storageKey) === '1';
+        } catch {
+          // Private mode / storage blocked: fall back to showing the popup.
+          return false;
+        }
+      },
+      set(): void {
+        try {
+          localStorage.setItem(storageKey, '1');
+        } catch {
+          /* ignore */
+        }
+      },
+    };
+
+    const focusables = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null);
+
+    const open = () => {
+      if (!overlay.hidden) return;
+      lastFocused = document.activeElement as HTMLElement | null;
+      overlay.hidden = false;
+      document.body.classList.add('is-locked');
+      // Focus the dialog itself, not the phone field — the modal opens on a
+      // timer, and pulling up a mobile keyboard uninvited is hostile.
+      panel.focus();
+      track('sms_popup_open');
+    };
+
+    const close = (reason: string) => {
+      if (overlay.hidden) return;
+      overlay.hidden = true;
+      document.body.classList.remove('is-locked');
+      // Once dismissed or submitted it stays gone for this browser.
+      store.set();
+      lastFocused?.focus();
+      track('sms_popup_close', { reason });
+    };
+
+    // --- Trigger ---------------------------------------------------------
+    if (!store.get()) {
+      timer = window.setTimeout(open, delay);
+    }
+
+    window.addEventListener('pagehide', () => window.clearTimeout(timer));
+
+    // --- Dismissal -------------------------------------------------------
+    closeBtn.addEventListener('click', () => close('button'));
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) close('overlay');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (overlay.hidden) return;
+
+      if (e.key === 'Escape') {
+        close('escape');
+        return;
+      }
+
+      // Focus trap.
+      if (e.key === 'Tab') {
+        const items = focusables();
+        if (items.length === 0) return;
+        const first = items[0]!;
+        const last = items[items.length - 1]!;
+        const active = document.activeElement;
+
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    // --- Submission ------------------------------------------------------
+    const say = (message: string, state: 'ok' | 'error') => {
+      feedback.textContent = message;
+      feedback.dataset.state = state;
+    };
+
+    /** US mobile numbers: 10 digits, or 11 with a leading country code. */
+    const normalize = (raw: string): string | null => {
+      const digits = raw.replace(/\D/g, '');
+      if (digits.length === 10) return `+1${digits}`;
+      if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
+      return null;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const phone = normalize(input.value);
+
+      if (!phone) {
+        input.setAttribute('aria-invalid', 'true');
+        say('Enter a 10-digit US mobile number.', 'error');
+        input.focus();
+        return;
+      }
+
+      input.removeAttribute('aria-invalid');
+
+      if (!endpoint) {
+        // No SMS provider is wired up yet — say so rather than pretending the
+        // number was captured. Set PUBLIC_SMS_OPTIN_ENDPOINT to enable this.
+        console.warn(
+          '[culverandmain] SMS opt-in submitted but PUBLIC_SMS_OPTIN_ENDPOINT is not set.',
+        );
+        say('Text sign-up isn’t live yet. Email info@culverandmain.com and we’ll add you.', 'error');
+        track('sms_optin_unconfigured');
+        return;
+      }
+
+      submit.disabled = true;
+      say('Sending…', 'ok');
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone }),
+        });
+
+        if (!res.ok) throw new Error(String(res.status));
+
+        say('You’re in. Watch for a text with your $5 credit.', 'ok');
+        track('sms_optin_success');
+        store.set();
+        window.setTimeout(() => close('submitted'), 2200);
+      } catch {
+        submit.disabled = false;
+        say('Something went wrong. Please try again.', 'error');
+        track('sms_optin_error');
+      }
+    });
+  }
+</script>

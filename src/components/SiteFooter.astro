@@ -1,0 +1,168 @@
+---
+import { site } from '../data/site';
+---
+
+<footer id="visit" class="footer">
+  <div class="shell">
+    <h2 class="wordmark">Culver<span class="amp">&amp;</span>Main</h2>
+
+    <div class="footer__grid">
+      <div class="footer__col">
+        <div class="eyebrow eyebrow--sky">Location</div>
+        <address class="footer__address">
+          {site.address.street},<br />
+          {site.address.locality}, {site.address.region} {site.address.postalCode}
+        </address>
+        <a class="link-caps" href={site.links.parking}>Parking</a>
+      </div>
+
+      <div class="footer__col">
+        <div class="eyebrow eyebrow--sky">Hours</div>
+        <div class="footer__address">
+          {site.hours.summary}<br />{site.hours.times}
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <div class="eyebrow eyebrow--sky">Contact</div>
+        <div class="footer__address">
+          <a class="link-plain" href={`tel:+1${site.phone.replace(/\D/g, '')}`}>{site.phone}</a>
+        </div>
+        <a class="link-email" href={`mailto:${site.email}`}>{site.email}</a>
+        <a class="link-caps" href={site.links.instagram} rel="me noopener" target="_blank">
+          Instagram
+        </a>
+      </div>
+
+      <div class="footer__col footer__col--start">
+        <div class="eyebrow eyebrow--sky">Work with us</div>
+        <a class="link-join" href={site.links.careers}>Join our team</a>
+        <a class="link-media" href={site.links.media}>Media inquiries</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      &copy; {new Date().getFullYear()} Culver &amp; Main · Downtown Culver City
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 96px var(--gutter) 56px;
+  }
+
+  .wordmark {
+    margin: 0 0 64px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(44px, 9vw, 140px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: var(--cream);
+  }
+
+  .amp {
+    color: var(--yellow);
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+    gap: 44px;
+    border-top: 1px solid var(--cream-25);
+    padding-top: 44px;
+  }
+
+  .footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer__col--start {
+    align-items: flex-start;
+  }
+
+  .footer__address {
+    font-size: 16px;
+    line-height: 1.5;
+    font-style: normal;
+  }
+
+  .footer a {
+    color: var(--cream);
+    transition: color 0.25s ease;
+  }
+
+  .footer a:hover {
+    color: var(--yellow);
+  }
+
+  .link-caps {
+    align-self: flex-start;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .link-plain {
+    text-decoration: none;
+  }
+
+  .link-email {
+    font-size: 15px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    align-self: flex-start;
+    overflow-wrap: anywhere;
+  }
+
+  .link-join {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--yellow);
+    letter-spacing: -0.01em;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+
+  .link-join:hover {
+    color: var(--cream);
+  }
+
+  .link-media {
+    color: var(--cream-75);
+    font-size: 13px;
+  }
+
+  .copyright {
+    margin-top: 56px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cream-45);
+  }
+
+  @media (max-width: 760px) {
+    .footer {
+      padding: 72px var(--gutter) 48px;
+    }
+
+    .wordmark {
+      margin-bottom: 44px;
+    }
+
+    /* Clear the fixed ORDER NOW button at the very bottom of the page. */
+    .copyright {
+      margin-top: 44px;
+      padding-bottom: 64px;
+    }
+  }
+</style>

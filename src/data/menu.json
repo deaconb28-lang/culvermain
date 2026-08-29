@@ -1,0 +1,128 @@
+{
+  "$comment": "Menu content for CULVER&MAIN. Edit here — nothing in the markup needs to change. Dietary tags: v = vegan, V = vegetarian, GF = gluten free. `price` is optional and unset until the client supplies pricing; the menu row renders a right-aligned price column automatically when it is present.",
+  "categories": [
+    {
+      "id": "breakfast",
+      "title": "Breakfast",
+      "items": [
+        {
+          "name": "Breakfast Burrito",
+          "tag": "",
+          "desc": "Scrambled eggs, cheddar cheese, your choice of bacon, chorizo, chicken sausage, or soyrizo, crispy potato hash, avocado smash, guajillo salsa, and a warm flour tortilla"
+        },
+        {
+          "name": "Challah French Toast",
+          "tag": "V",
+          "desc": "Griddle custard challah, peach & apricot compote, orange supremes, whipped crème fraiche, house butter, warm maple syrup"
+        },
+        {
+          "name": "Culver Breakfast",
+          "tag": "V, GF",
+          "desc": "Poached eggs, sautéed kale and spinach, chimichurri, roasted mushrooms, garlic-thyme roasted tomatoes, seared halloumi, and microgreens"
+        },
+        {
+          "name": "Breakfast Sandwich",
+          "tag": "",
+          "desc": "Over-easy eggs, melted New School American cheese, chicken apple sausage or house cured pork belly bacon, bacon-onion jam, microgreens, mayo"
+        },
+        {
+          "name": "Green Goddess Avocado Toast",
+          "tag": "V",
+          "desc": "Toasted multigrain, sliced avocado, stracciatella cheese, farmers market spring vegetables, pea tendrils, radishes, crispy quinoa, green goddess dressing"
+        },
+        {
+          "name": "Overnight Oats",
+          "tag": "v, GF",
+          "desc": "Jasmine apricot compote, apricot, strawberry, candied walnuts"
+        },
+        {
+          "name": "Seasonal Fruit Parfait",
+          "tag": "v, GF",
+          "desc": "4 berry compote, blood orange, granola"
+        },
+        {
+          "name": "Chilaquiles Verde",
+          "tag": "V",
+          "desc": "Salsa verde and black bean sauce, tortilla chips, grated parmesan, pickled red onions, lime crema, two eggs any style, microgreens"
+        },
+        {
+          "name": "Three Egg Breakfast",
+          "tag": "",
+          "desc": "Three eggs any style, choice of chicken apple sausage or bacon, multigrain toast, sunrise potatoes"
+        }
+      ]
+    },
+    {
+      "id": "mains",
+      "title": "Salads, Sandwiches & Bowls",
+      "footnote": "All sandwiches come with choice of side salad or housemade potato chips",
+      "items": [
+        {
+          "name": "Spring Farmers Bowl",
+          "tag": "V, GF",
+          "desc": "Tricolor quinoa, pan seared radishes, asparagus, sweet potato, sautéed spinach & kale, shaved fennel, peas, avocado, fava aji verde"
+        },
+        {
+          "name": "Spring Burrata Salad",
+          "tag": "V, GF",
+          "desc": "Shredded kale, arugula, sun gold tomato, radish, cucumber, spring herb oil, caramelized onion thyme dressing"
+        },
+        {
+          "name": "Chicken Cesar Salad",
+          "tag": "GF",
+          "desc": "A seasonal Caesar salad with little gem lettuce, charred leeks, shaved Parmesan, and chickpea croutons, tossed in avocado-yogurt Caesar dressing and finished with fresh herbs and candied lemon zest"
+        },
+        {
+          "name": "Simple Salad",
+          "tag": "V, GF",
+          "desc": "Little gem lettuce, heirloom carrots, heirloom baby tomatoes, Persian cucumbers, feta cheese, and champagne vinaigrette"
+        },
+        {
+          "name": "Fried Fish Sandwich",
+          "tag": "",
+          "desc": "Toasted buttered brioche bun, beer-battered halibut, melted New School American Cheese, house made tartar sauce"
+        },
+        {
+          "name": "Hot Honey Fried Chicken Sandwich",
+          "tag": "",
+          "desc": "Buttermilk-marinated Mary's chicken, Calabrian hot honey, charred lemon slaw, champagne aioli, brioche bun"
+        },
+        {
+          "name": "Classic Cheeseburger",
+          "tag": "",
+          "desc": "New School American Cheese, bacon & onion jam, mild secret sauce, toasted brioche bun. Add sunny egg · Add bacon"
+        },
+        {
+          "name": "Tuna Melt",
+          "tag": "",
+          "desc": "House tuna salad, shredded artisanal romaine lettuce, potato crisps, capers, provolone, grilled sourdough, served with house pickle spear"
+        },
+        {
+          "name": "BLAT",
+          "tag": "",
+          "desc": "House cured pork belly bacon, lettuce, tomato, avocado, mayo, toasted sourdough | sub tempeh beacon & veganaise (v)"
+        },
+        {
+          "name": "Main Turkey Sandwich",
+          "tag": "",
+          "desc": "Mesquite-smoked turkey, tomato, pickled red onions, whole grain mustard dijonaise, and arugula on toasted multigrain bread"
+        }
+      ]
+    },
+    {
+      "id": "kids",
+      "title": "Kids & Folks",
+      "items": [
+        { "name": "Kids Breakfast Burrito", "tag": "", "desc": "Served with side of fruit" },
+        { "name": "Chicken Tenders", "tag": "", "desc": "Served with side of fries" },
+        { "name": "Silver Dollar Pancakes", "tag": "", "desc": "Served with fresh fruit" },
+        { "name": "Kids Cheeseburger", "tag": "", "desc": "Served with side of Fries" }
+      ]
+    }
+  ],
+  "legend": [
+    "v — VEGAN",
+    "V — VEGETARIAN",
+    "GF — GLUTEN FREE"
+  ]
+}

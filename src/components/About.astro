@@ -1,0 +1,131 @@
+---
+import { site } from '../data/site';
+
+// Authored line breaks — one span per line, per the design.
+const headlines = ['Friends & Neighbors', 'Eat & Drink', 'Morning & Afternoon'];
+---
+
+<section id="about" class="about">
+  <div class="about__grid shell anim-reveal">
+    <div class="about__head">
+      <div class="eyebrow eyebrow--tomato about__eyebrow">What we're about</div>
+      <h2 class="about__h2">
+        {headlines.map((line) => <span>{line}</span>)}
+      </h2>
+    </div>
+
+    <div class="about__body">
+      <p>
+        {/* The double space after "Culver City." is in the client's source copy; HTML
+            collapses it on render, exactly as the design prototype does. */}
+        We&rsquo;re an all-day cafe located in the heart of Culver City.  Stop by in the
+        morning for a unique selection of pastries and coffee drinks or in the afternoon for
+        delicious, health-conscious salads, sandwiches and desserts.
+      </p>
+      <p>
+        Dinner and delivery coming soon.<br />Join our newsletter or socials below to stay
+        informed.
+      </p>
+      <a class="about__link" href={site.links.parking}>Free parking available</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding: 110px var(--gutter);
+  }
+
+  .about__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+    gap: 64px;
+    align-items: start;
+  }
+
+  .about__eyebrow {
+    margin-bottom: 22px;
+  }
+
+  .about__h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(34px, 4.2vw, 58px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    color: var(--tomato);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /*
+    The three lines are authored, not wrapped — "MORNING & AFTERNOON" is the
+    longest and needs up to 11.5x the font size in width (Bricolage's optical
+    sizing widens the glyphs as the type gets smaller, so the ratio is not
+    constant). Capping the type against the column's own width — rather than
+    the viewport's — keeps every line whole at every width instead of letting
+    it break mid-phrase.
+  */
+  @supports (container-type: inline-size) {
+    .about__head {
+      container-type: inline-size;
+    }
+
+    .about__h2 {
+      font-size: min(clamp(34px, 4.2vw, 58px), 8.5cqi);
+    }
+  }
+
+  .about__body {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding-top: 6px;
+  }
+
+  .about__body p {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  .about__link {
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--navy);
+    border-bottom: 2px solid var(--yellow);
+    padding-bottom: 4px;
+    transition: color 0.25s ease;
+  }
+
+  .about__link:hover {
+    color: var(--tomato);
+  }
+
+  /*
+    Two columns start at 824px, where auto-fit first fits 2x340px. Giving the
+    headline column the larger share keeps the capped type close to the
+    specified clamp instead of well under it.
+  */
+  @media (min-width: 824px) {
+    .about__grid {
+      grid-template-columns: 1.12fr 1fr;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .about {
+      padding: 72px var(--gutter);
+    }
+
+    .about__grid {
+      gap: 40px;
+    }
+  }
+</style>

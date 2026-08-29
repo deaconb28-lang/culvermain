@@ -1,0 +1,86 @@
+---
+import { site } from '../data/site';
+---
+
+<nav class="floating-nav" aria-label="Order online">
+  <a
+    class="floating"
+    id="floating-order"
+    href={site.links.order}
+    data-track="order_now_click"
+    data-track-location="floating"
+  >
+    Order now
+  </a>
+</nav>
+
+<style>
+  .floating-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+  }
+
+  .floating {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 100;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 18px 28px;
+    /* Squared, not a pill — explicit client direction. */
+    border-radius: var(--r-button);
+    box-shadow: 0 10px 30px rgba(11, 42, 91, 0.35);
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      opacity 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+
+  .floating:hover {
+    background: var(--yellow);
+    color: var(--navy);
+  }
+
+  /*
+    Fades out while the menu column's own ORDER NOW button is on screen, so
+    the fixed button never sits on top of the duplicate CTA.
+  */
+  .floating.is-hidden {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+  }
+
+  @media (max-width: 520px) {
+    .floating {
+      right: 16px;
+      bottom: 16px;
+      padding: 15px 22px;
+      font-size: 12px;
+    }
+  }
+</style>
+
+<script>
+  const button = document.getElementById('floating-order');
+  // The menu section carries its own full-width ORDER NOW at the foot of the
+  // third column; the fixed button would land squarely on top of it.
+  const inlineCta = document.querySelector<HTMLElement>('[data-track-location="menu"]');
+
+  if (button && inlineCta && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => button.classList.toggle('is-hidden', entry!.isIntersecting),
+      { rootMargin: '-40px 0px -40px 0px' },
+    );
+
+    observer.observe(inlineCta);
+  }
+</script>

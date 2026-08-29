@@ -1,0 +1,172 @@
+---
+import { Picture } from 'astro:assets';
+import heroImage from '../assets/hero.png';
+import { site } from '../data/site';
+---
+
+<section id="top" class="hero">
+  <Picture
+    class="hero__img"
+    src={heroImage}
+    formats={['avif', 'webp']}
+    fallbackFormat="jpeg"
+    pictureAttributes={{ style: 'display: contents' }}
+    widths={[768, 1024, 1440, 1774]}
+    sizes="100vw"
+    alt="The dining room at Culver & Main, full of guests along the window counter"
+    loading="eager"
+    fetchpriority="high"
+    decoding="sync"
+  />
+  <!--
+    Scrim is tuned to this photograph. The handoff's stops
+    (0.4/0.34/0.62/0.9, top to bottom) leave the cream headline at 1.9:1
+    against the bright window behind it — well under the 3:1 the handoff
+    itself asks us to verify. The headline sits a roughly fixed distance off
+    the hero's bottom edge while the hero's height varies, so stops measured
+    as a percentage from the top slide out from under it; worst on short
+    viewports and around 1024px, where the right column wraps and lifts the
+    headline higher still. Anchoring the stops to the bottom in px tracks the
+    headline instead. The end alphas are the design's (0.4 top, ~0.9 bottom)
+    and the mid-tones carry the work, which is where the handoff says the
+    difference is made. Holds >=3.6:1 across every width and viewport height
+    tested. Re-measure if the hero image is ever swapped:
+    `npm run check:contrast`.
+  -->
+  <div class="hero__scrim"></div>
+
+  <div class="hero__content">
+    <div class="hero__headline">
+      <h1>A table<br />for the<br />neighborhood</h1>
+    </div>
+
+    <div class="hero__aside">
+      <p>{site.description}</p>
+      <div class="hero__buttons">
+        <a class="btn btn--yellow" href="#menus">See the menu</a>
+        <a
+          class="btn btn--outline-cream"
+          href={site.links.order}
+          data-track="order_pickup_click"
+          data-track-location="hero">Order pickup</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    /* Sized by the design's height, but allowed to grow rather than clip if
+       the stacked columns ever need more room at an odd viewport ratio. */
+    height: auto;
+    min-height: max(540px, min(84vh, 760px));
+    display: flex;
+    align-items: flex-end;
+    background: var(--navy);
+    /* Clips the ken burns scale(1.08) so it never widens the page. */
+    overflow: hidden;
+  }
+
+  .hero :global(.hero__img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+    animation: kenburns 1.8s var(--ease) both;
+  }
+
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      0deg,
+      rgba(11, 42, 91, 0.92) 0px,
+      rgba(11, 42, 91, 0.78) 220px,
+      rgba(11, 42, 91, 0.6) 500px,
+      rgba(11, 42, 91, 0.4) 100%
+    );
+  }
+
+  .hero__content {
+    position: relative;
+    /* The 108px keeps the right column clear of the fixed ORDER NOW button. */
+    padding: 0 var(--gutter) 108px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .hero__headline {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    animation: rise 0.9s var(--ease) 0.12s both;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(48px, 8.5vw, 132px);
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    color: var(--cream);
+    text-transform: uppercase;
+    max-width: 14ch;
+    text-shadow: 0 2px 24px rgba(11, 42, 91, 0.55);
+  }
+
+  .hero__aside {
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 10px;
+    animation: rise 0.9s var(--ease) 0.34s both;
+  }
+
+  .hero__aside p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--cream);
+  }
+
+  .hero__buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /*
+    "NEIGHBORHOOD" is an authored line, not a wrap — it needs up to 7.4x the
+    font size in width at the small end, where Bricolage's optical sizing
+    widens the glyphs. Below ~430px the clamp's 48px floor is wider than the
+    viewport allows, so cap the type against the content column instead of
+    letting the hard break come apart. The cap is slack at every width above
+    that, so the specified clamp is what renders on desktop.
+  */
+  @supports (container-type: inline-size) {
+    .hero__content {
+      container-type: inline-size;
+    }
+
+    h1 {
+      font-size: min(clamp(48px, 8.5vw, 132px), 13cqi);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .hero__content {
+      padding-top: 140px;
+      padding-bottom: 96px;
+    }
+  }
+</style>

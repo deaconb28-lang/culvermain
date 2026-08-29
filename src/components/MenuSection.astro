@@ -1,0 +1,135 @@
+---
+import { categories, legend } from '../data/menu';
+import { site } from '../data/site';
+import MenuRow from './MenuRow.astro';
+
+const [breakfast, mains, kids] = categories;
+---
+
+<section id="menus" class="menu">
+  <div class="shell">
+    <div class="menu__head">
+      <h2 class="menu__title anim-rise-scroll">Eat<br />Here</h2>
+      <div class="menu__hours">{site.hours.short}<br />{site.hours.times}</div>
+    </div>
+
+    <div class="menu__grid">
+      <div class="menu__col">
+        <h3 class="eyebrow eyebrow--tomato menu__eyebrow">{breakfast.title}</h3>
+        {breakfast.items.map((dish) => <MenuRow dish={dish} />)}
+      </div>
+
+      <div class="menu__col">
+        <h3 class="eyebrow eyebrow--tomato menu__eyebrow">{mains.title}</h3>
+        {mains.items.map((dish) => <MenuRow dish={dish} />)}
+        {mains.footnote && <p class="menu__footnote">{mains.footnote}</p>}
+      </div>
+
+      <div class="menu__col">
+        <h3 class="eyebrow eyebrow--tomato menu__eyebrow">{kids.title}</h3>
+        {kids.items.map((dish) => <MenuRow dish={dish} />)}
+
+        <div class="menu__legend">
+          {legend.map((line) => <span>{line}</span>)}
+        </div>
+
+        <a
+          class="btn btn--tomato menu__cta"
+          href={site.links.order}
+          data-track="order_now_click"
+          data-track-location="menu">Order now</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .menu {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 96px var(--gutter) 110px;
+  }
+
+  .menu__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 2px solid var(--yellow);
+    padding-bottom: 20px;
+    margin-bottom: 48px;
+  }
+
+  .menu__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(52px, 8vw, 92px);
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+
+  .menu__hours {
+    text-align: right;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sky);
+  }
+
+  .menu__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 40px;
+    align-items: start;
+  }
+
+  .menu__eyebrow {
+    margin: 0 0 22px;
+  }
+
+  .menu__footnote {
+    margin: 20px 0 0;
+    padding: 14px 0 0;
+    border-top: 1px solid var(--cream-20);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cream-70);
+  }
+
+  .menu__legend {
+    margin-top: 32px;
+    background: var(--yellow);
+    color: var(--navy);
+    padding: 20px;
+    border-radius: var(--r-panel);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .menu__cta {
+    margin-top: 16px;
+    display: block;
+    text-align: center;
+    padding: 16px 22px;
+  }
+
+  @media (max-width: 760px) {
+    .menu {
+      padding: 72px var(--gutter) 84px;
+    }
+
+    .menu__head {
+      margin-bottom: 36px;
+    }
+  }
+</style>

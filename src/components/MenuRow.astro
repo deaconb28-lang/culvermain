@@ -1,0 +1,71 @@
+---
+import type { Dish } from '../data/menu';
+import { dishLabel } from '../data/menu';
+
+interface Props {
+  dish: Dish;
+}
+
+const { dish } = Astro.props;
+---
+
+<div class="row anim-row">
+  <div class="row__head">
+    <span class="row__name">{dishLabel(dish)}</span>
+    {dish.price && <span class="row__price">{dish.price}</span>}
+  </div>
+  <p class="row__desc">{dish.desc}</p>
+</div>
+
+<style>
+  .row {
+    padding: 14px 0;
+    border-top: 1px solid var(--cream-20);
+    transition:
+      transform 0.35s var(--ease),
+      padding-left 0.35s var(--ease),
+      border-color 0.35s ease;
+  }
+
+  .row:hover {
+    padding-left: 14px;
+    border-color: var(--yellow);
+  }
+
+  /*
+    Prices sit on the dish-name row in their own right-aligned column, never in
+    the description. No prices have been supplied yet, so this stays dormant
+    until `price` is filled in on a dish in menu.json.
+  */
+  .row__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .row__name,
+  .row__price {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    transition: color 0.3s ease;
+  }
+
+  .row__price {
+    flex: none;
+    color: var(--cream-70);
+  }
+
+  .row:hover .row__name {
+    color: var(--yellow);
+  }
+
+  .row__desc {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cream-70);
+  }
+</style>

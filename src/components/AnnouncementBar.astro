@@ -1,0 +1,42 @@
+---
+import { site } from '../data/site';
+---
+
+<aside class="announce" aria-label="Parking">
+  Parking available at {site.parking.address} · {site.parking.note} ·{' '}
+  <a href={site.links.parking}>Get directions</a>
+</aside>
+
+<style>
+  .announce {
+    background: var(--sky);
+    color: var(--navy);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .announce a {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .announce a:hover {
+    color: var(--navy);
+  }
+
+  /* Three lines of tracked-out caps is a lot on a phone — tighten, don't shrink away. */
+  @media (max-width: 520px) {
+    .announce {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 9px 14px;
+    }
+  }
+</style>

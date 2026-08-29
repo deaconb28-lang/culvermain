@@ -1,0 +1,54 @@
+---
+const items = [
+  'Open 7 days · 8 AM – 3 PM',
+  'Breakfast all day',
+  'Espresso & matcha bar',
+  'Free parking on Cardiff',
+  '3829 Main Street',
+];
+
+// The track is duplicated so translateX(-50%) loops seamlessly.
+const track = [...items, ...items];
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {
+      track.map((item) => (
+        <>
+          <span>{item}</span>
+          <span class="sep">✳</span>
+        </>
+      ))
+    }
+  </div>
+</div>
+
+<!-- The same facts, read once, for assistive tech. -->
+<p class="visually-hidden">{items.join('. ')}.</p>
+
+<style>
+  .marquee {
+    background: var(--navy);
+    color: var(--yellow);
+    overflow: hidden;
+    padding: 12px 0;
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee 32s linear infinite;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    gap: 28px;
+    padding-right: 28px;
+  }
+
+  .sep {
+    color: var(--tomato);
+  }
+</style>

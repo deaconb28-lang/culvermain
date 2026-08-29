@@ -12,6 +12,8 @@ import { site, smsOptInEndpoint } from '../data/site';
   data-endpoint={smsOptInEndpoint}
   hidden
 >
+  <div class="scrim"></div>
+
   <div
     class="panel"
     role="dialog"
@@ -69,7 +71,6 @@ import { site, smsOptInEndpoint } from '../data/site';
     position: fixed;
     inset: 0;
     z-index: 200;
-    background: var(--navy-60);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,8 +81,27 @@ import { site, smsOptInEndpoint } from '../data/site';
     display: none;
   }
 
+  /*
+    The dimming layer starts at the header's bottom edge (--scrim-top, set when
+    the modal opens) rather than at the top of the viewport, so the announcement
+    bar and the tomato header keep their own colour instead of being tinted
+    navy. The overlay above still spans the full viewport, so a click anywhere
+    outside the panel — over the header included — closes the modal.
+  */
+  .scrim {
+    position: absolute;
+    inset: var(--scrim-top, 0px) 0 0 0;
+    background: var(--navy-60);
+  }
+
   .panel {
     position: relative;
+    /* Above the scrim, and above the sticky header it may overlap. */
+    z-index: 1;
+    /* Focus moves here programmatically when the modal opens, so the global
+       focus ring would appear without the visitor having navigated to it. The
+       dialog is announced by its role and label instead. */
+    outline: none;
     width: min(1030px, 100%);
     max-height: 92vh;
     overflow: auto;
@@ -293,6 +313,14 @@ import { site, smsOptInEndpoint } from '../data/site';
     let timer: number | undefined;
     let lastFocused: HTMLElement | null = null;
 
+    // Where the dimming starts: the bottom of the sticky header, so the header
+    // and the announcement bar above it stay untinted.
+    const positionScrim = () => {
+      const header = document.getElementById('site-header');
+      const top = header ? Math.max(0, Math.round(header.getBoundingClientRect().bottom)) : 0;
+      overlay.style.setProperty('--scrim-top', `${top}px`);
+    };
+
     const store = {
       get(): boolean {
         try {
@@ -321,6 +349,7 @@ import { site, smsOptInEndpoint } from '../data/site';
     const open = () => {
       if (!overlay.hidden) return;
       lastFocused = document.activeElement as HTMLElement | null;
+      positionScrim();
       overlay.hidden = false;
       document.body.classList.add('is-locked');
       // Focus the dialog itself, not the phone field — the modal opens on a
@@ -345,6 +374,12 @@ import { site, smsOptInEndpoint } from '../data/site';
     }
 
     window.addEventListener('pagehide', () => window.clearTimeout(timer));
+
+    // The page is scroll-locked while the modal is open, so the header only
+    // moves if the viewport itself changes.
+    window.addEventListener('resize', () => {
+      if (!overlay.hidden) positionScrim();
+    });
 
     // --- Dismissal -------------------------------------------------------
     closeBtn.addEventListener('click', () => close('button'));
